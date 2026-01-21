@@ -37,11 +37,57 @@ class JobTests: XCTestCase {
         job.raise(byPercent: 1.0) // Nice raise, bruh
         XCTAssert(job.calculateIncome(10) == 320)
     }
+    
+    func testConvertHourlyToSalaryExact()
+    {
+        let job = Job(title: "Engineer", type: Job.JobType.Hourly(15.0))
+        job.convert()
+
+        switch job.type
+        {
+            case .Salary(let amount):
+                XCTAssert(amount == 30000)
+            default:
+                XCTFail("Hourly job should convert to Salary")
+        }
+    }
+
+    func testConvertHourlyToSalaryRoundedUp()
+    {
+        let job = Job(title: "Designer", type: Job.JobType.Hourly(17.0))
+        job.convert()
+
+        switch job.type
+        {
+            case .Salary(let amount):
+                XCTAssert(amount == 35000)
+            default:
+                XCTFail("Hourly job should convert to Salary")
+        }
+    }
+    
+    func testConvertSalaryDoesNothing()
+    {
+        let job = Job(title: "Manager", type: Job.JobType.Salary(50000))
+        job.convert()
+
+        switch job.type
+        {
+            case .Salary(let amount):
+                XCTAssert(amount == 50000)
+            default:
+                XCTFail("Salary job should remain Salary")
+        }
+    }
+
   
     static var allTests = [
         ("testCreateSalaryJob", testCreateSalaryJob),
         ("testCreateHourlyJob", testCreateHourlyJob),
         ("testSalariedRaise", testSalariedRaise),
         ("testHourlyRaise", testHourlyRaise),
+        ("testConvertHourlyToSalaryExact", testConvertHourlyToSalaryExact),
+        ("testConvertHourlyToSalaryRoundedUp", testConvertHourlyToSalaryRoundedUp),
+        ("testConvertSalaryDoesNothing", testConvertSalaryDoesNothing),
     ]
 }

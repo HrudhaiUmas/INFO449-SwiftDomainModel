@@ -1,3 +1,5 @@
+import Foundation
+
 struct DomainModel
 {
     var text = "Hello, World!"
@@ -144,8 +146,23 @@ public class Job
                 self.type = JobType.Hourly(hourlyRate * (1.0 + percent))
         }
     }
+    
+    public func convert()
+    {
+        switch self.type
+        {
+            case .Hourly(let hourlyRate):
+                let yearlySalary = hourlyRate * 2000.0
 
+                let roundedSalary =
+                    ((Int(yearlySalary) + 4999) / 5000) * 5000
 
+                self.type = JobType.Salary(UInt(roundedSalary))
+
+            case .Salary:
+                break
+        }
+    }
 }
 
 ////////////////////////////////////
