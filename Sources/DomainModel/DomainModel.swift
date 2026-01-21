@@ -1,5 +1,3 @@
-import Foundation
-
 struct DomainModel
 {
     var text = "Hello, World!"
@@ -170,47 +168,91 @@ public class Job
 //
 public class Person
 {
-    public let firstName: String
-    public let lastName: String
     public let age: Int
-
+    private let storedFirstName: String?
+    private let storedLastName: String?
     private var storedJob: Job?
     private var storedSpouse: Person?
+
+    public var firstName: String
+    {
+        if let name = storedFirstName
+        {
+            return name
+        }
+        else
+        {
+            return ""
+        }
+    }
+
+    public var lastName: String
+    {
+        if let name = storedLastName
+        {
+            return name
+        }
+        else
+        {
+            return ""
+        }
+    }
 
     public var job: Job?
     {
         get
         {
-            return storedJob
+            storedJob
         }
         set
         {
-            if self.age >= 16
+            if age >= 16
             {
                 storedJob = newValue
             }
         }
     }
-
+    
     public var spouse: Person?
     {
         get
         {
-            return storedSpouse
+            storedSpouse
         }
         set
         {
-            if self.age >= 18
+            if age >= 18
             {
                 storedSpouse = newValue
             }
         }
     }
 
+    // MARK: Initializers
     public init(firstName: String, lastName: String, age: Int)
     {
-        self.firstName = firstName
-        self.lastName = lastName
+        self.storedFirstName = firstName
+        self.storedLastName = lastName
+        self.age = age
+        self.storedJob = nil
+        self.storedSpouse = nil
+    }
+
+    // EC stuff: allow first name only
+    public init(firstName: String, age: Int)
+    {
+        self.storedFirstName = firstName
+        self.storedLastName = nil
+        self.age = age
+        self.storedJob = nil
+        self.storedSpouse = nil
+    }
+
+    // EC stuff: allow last name only
+    public init(lastName: String, age: Int)
+    {
+        self.storedFirstName = nil
+        self.storedLastName = lastName
         self.age = age
         self.storedJob = nil
         self.storedSpouse = nil
@@ -219,7 +261,7 @@ public class Person
     public func toString() -> String
     {
         let jobString: String
-        if let currentJob = self.job
+        if let currentJob = job
         {
             switch currentJob.type
             {
@@ -234,17 +276,8 @@ public class Person
             jobString = "nil"
         }
 
-        let spouseString: String
-        if let currentSpouse = self.spouse
-        {
-            spouseString = currentSpouse.firstName
-        }
-        else
-        {
-            spouseString = "nil"
-        }
-
-        return "[Person: firstName:\(self.firstName) lastName:\(self.lastName) age:\(self.age) job:\(jobString) spouse:\(spouseString)]"
+        let spouseString = spouse?.firstName ?? "nil"
+        return "[Person: firstName:\(storedFirstName ?? "nil") lastName:\(storedLastName ?? "nil") age:\(age) job:\(jobString) spouse:\(spouseString)]"
     }
 }
 
