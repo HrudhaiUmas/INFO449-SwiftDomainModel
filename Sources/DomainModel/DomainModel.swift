@@ -94,6 +94,58 @@ public class Job
         case Hourly(Double)
         case Salary(UInt)
     }
+    
+    public let title: String;
+    public var type: JobType;
+    
+    public init(title: String, type: JobType)
+    {
+        self.title = title;
+        self.type = type;
+    }
+    
+    public func calculateIncome(_ hours: Int) -> Int
+    {
+        var totalIncome = 0
+
+        switch self.type
+        {
+            case JobType.Salary(let yearlyAmount):
+                totalIncome = Int(yearlyAmount)
+
+            case JobType.Hourly(let hourlyRate):
+                let income = Double(hours) * hourlyRate
+                totalIncome = Int(income)
+        }
+
+        return totalIncome
+    }
+    
+    public func raise(byAmount amount: Double)
+    {
+        switch self.type
+        {
+            case .Salary(let yearlyAmount):
+                self.type = JobType.Salary(UInt(Double(yearlyAmount) + amount))
+
+            case .Hourly(let hourlyRate):
+                self.type = JobType.Hourly(hourlyRate + amount)
+        }
+    }
+    
+    public func raise(byPercent percent: Double)
+    {
+        switch self.type
+        {
+            case .Salary(let yearlyAmount):
+                self.type = JobType.Salary(UInt(Double(yearlyAmount) * (1.0 + percent)))
+
+            case .Hourly(let hourlyRate):
+                self.type = JobType.Hourly(hourlyRate * (1.0 + percent))
+        }
+    }
+
+
 }
 
 ////////////////////////////////////
