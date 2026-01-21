@@ -236,5 +236,50 @@ public class Person
 //
 public class Family
 {
-    
+    public var members: [Person]
+
+    public init(spouse1: Person, spouse2: Person)
+    {
+        self.members = []
+
+        // making sure neither person already has a spouse
+        if spouse1.spouse == nil && spouse2.spouse == nil
+        {
+            spouse1.spouse = spouse2
+            spouse2.spouse = spouse1
+        }
+
+        self.members.append(spouse1)
+        self.members.append(spouse2)
+    }
+
+    public func haveChild(_ child: Person) -> Bool
+    {
+        // checking if at least one spouse is over 21
+        let spouse1 = self.members[0]
+        let spouse2 = self.members[1]
+
+        if spouse1.age > 21 || spouse2.age > 21
+        {
+            self.members.append(child)
+            return true
+        }
+
+        return false
+    }
+
+    public func householdIncome() -> Int
+    {
+        var totalIncome = 0
+
+        for person in self.members
+        {
+            if let currentJob = person.job
+            {
+                totalIncome += currentJob.calculateIncome(2000)
+            }
+        }
+
+        return totalIncome
+    }
 }
