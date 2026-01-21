@@ -153,7 +153,82 @@ public class Job
 //
 public class Person
 {
-    
+    public let firstName: String
+    public let lastName: String
+    public let age: Int
+
+    private var storedJob: Job?
+    private var storedSpouse: Person?
+
+    public var job: Job?
+    {
+        get
+        {
+            return storedJob
+        }
+        set
+        {
+            if self.age >= 16
+            {
+                storedJob = newValue
+            }
+        }
+    }
+
+    public var spouse: Person?
+    {
+        get
+        {
+            return storedSpouse
+        }
+        set
+        {
+            if self.age >= 18
+            {
+                storedSpouse = newValue
+            }
+        }
+    }
+
+    public init(firstName: String, lastName: String, age: Int)
+    {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.storedJob = nil
+        self.storedSpouse = nil
+    }
+
+    public func toString() -> String
+    {
+        let jobString: String
+        if let currentJob = self.job
+        {
+            switch currentJob.type
+            {
+                case .Salary(let amount):
+                    jobString = "Salary(\(amount))"
+                case .Hourly(let rate):
+                    jobString = "Hourly(\(rate))"
+            }
+        }
+        else
+        {
+            jobString = "nil"
+        }
+
+        let spouseString: String
+        if let currentSpouse = self.spouse
+        {
+            spouseString = currentSpouse.firstName
+        }
+        else
+        {
+            spouseString = "nil"
+        }
+
+        return "[Person: firstName:\(self.firstName) lastName:\(self.lastName) age:\(self.age) job:\(jobString) spouse:\(spouseString)]"
+    }
 }
 
 ////////////////////////////////////
